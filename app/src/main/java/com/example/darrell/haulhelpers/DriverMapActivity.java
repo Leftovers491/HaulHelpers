@@ -1,5 +1,6 @@
 package com.example.darrell.haulhelpers;
 
+import android.support.v4.app.FragmentActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
