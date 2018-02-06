@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "752250204317",
+    "firebase_url": "https://haulhelpers-7c32a.firebaseio.com",
+    "project_id": "haulhelpers-7c32a",
+    "storage_bucket": "haulhelpers-7c32a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752250204317:android:a75bfecf5cbccabd",
+        "android_client_info": {
+          "package_name": "com.example.darrell.haulhelpers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752250204317-fq6s8490bd3cp9mqj9jfc5d6943umel1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.darrell.haulhelpers",
+            "certificate_hash": "3537e0c01c3b13da33343609aea48e544574adf6"
+          }
+        },
+        {
+          "client_id": "752250204317-fppk3jgaq13kojfljkb7vmvjjp63qcoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkA-Jg9-S9hQTwtUPXNf3xvYJGT9C8YTo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752250204317-fppk3jgaq13kojfljkb7vmvjjp63qcoc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
