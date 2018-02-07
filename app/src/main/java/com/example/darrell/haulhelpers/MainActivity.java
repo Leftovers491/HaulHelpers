@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+//TEST
+
 public class MainActivity extends AppCompatActivity {
     private Button mDriver, mCustomer;
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
