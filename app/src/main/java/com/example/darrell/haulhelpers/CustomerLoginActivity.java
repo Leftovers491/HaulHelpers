@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class CustomerLoginActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
-    private Button mLogin, mRegistration, mForgot;
+    private Button mLogin, mRegistration, mForgot, btnBack;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -47,6 +47,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         mForgot= (Button) findViewById(R.id.forgot);
+        btnBack = (Button) findViewById(R.id.btn_back);
 
         mLogin = (Button) findViewById(R.id.login);
         mRegistration = (Button) findViewById(R.id.registration);
@@ -94,6 +95,16 @@ public class CustomerLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CustomerLoginActivity.this,ResetPasswordActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CustomerLoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 return;

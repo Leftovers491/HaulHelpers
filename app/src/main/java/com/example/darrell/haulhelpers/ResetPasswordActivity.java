@@ -1,5 +1,6 @@
 package com.example.darrell.haulhelpers;
 
+        import android.content.Intent;
         import android.os.Bundle;
         import android.support.annotation.NonNull;
         import android.support.v7.app.AppCompatActivity;
@@ -58,8 +59,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
+                return;
             }
         });
     }
