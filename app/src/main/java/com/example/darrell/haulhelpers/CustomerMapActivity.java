@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -46,7 +45,7 @@ import java.util.List;
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
-    GoogleApiClient mGoolgeApiClient;
+    GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
@@ -81,7 +80,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View view) {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                 GeoFire geoFire = new GeoFire(ref);
                 geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
@@ -164,14 +162,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;
-                    mRequest.setText("Driver Found");
+                    //mRequest.setText("Driver Found");
 
                     if(map.get(0) != null ){
                         locationLat = Double.parseDouble(map.get(0).toString());
                     }
 
                     if(map.get(1) != null ){
-                        locationLng = Double.parseDouble(map.get(0).toString());
+                        locationLng = Double.parseDouble(map.get(1).toString());
                     }
 
                     LatLng driverLatLng = new LatLng(locationLat, locationLng);
@@ -190,9 +188,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     float distance = loc1.distanceTo(loc2); // in meters straight line
 
-                    mRequest.setText("Driver Found "+String.valueOf(distance));
+                    if (distance <100){
+                        mRequest.setText("Driver's Here");
+                    }else {
+                        mRequest.setText("Driver Found: "+String.valueOf(distance));
+                    }
+
+                    //mRequest.setText("Driver Found "+String.valueOf(distance));
 
                     mDriverMarker= mMap.addMarker(new MarkerOptions().position(driverLatLng).title(" your driver"));
+
+
                 }
             }
 
@@ -229,12 +235,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     protected synchronized void buildGoogleApiClient(){
-        mGoolgeApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoolgeApiClient.connect();
+        mGoogleApiClient.connect();
     }
 
     public void statusCheck() {
@@ -309,7 +315,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             return;
         }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoolgeApiClient, mLocationRequest, this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
 
