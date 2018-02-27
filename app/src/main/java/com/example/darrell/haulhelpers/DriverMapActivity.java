@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
@@ -38,12 +37,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
-import java.util.Map;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
-    GoogleApiClient mGoolgeApiClient;
+    GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
@@ -77,7 +75,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getAssignedCustomer(){
         String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Customers").child("Drivers").child(driverID).child("customerRideID");
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRideID");
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -108,7 +106,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     }
 
                     if(map.get(1) != null ){
-                        locationLng = Double.parseDouble(map.get(0).toString());
+                        locationLng = Double.parseDouble(map.get(1).toString());
                     }
 
                     LatLng driverLatLng = new LatLng(locationLat, locationLng);
@@ -151,12 +149,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     protected synchronized void buildGoogleApiClient(){
-        mGoolgeApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoolgeApiClient.connect();
+        mGoogleApiClient.connect();
     }
 
     public void statusCheck() {
@@ -203,8 +201,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
 
             String userId = FirebaseAuth.getInstance().getUid();
-            DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driverAvailable");
-            DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("driverWorking");
+            DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
+            DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("driversWorking");
 
             GeoFire geoFireAvailable = new GeoFire(refAvailable);
             GeoFire geoFireWorking = new GeoFire(refWorking);
@@ -254,7 +252,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             return;
         }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoolgeApiClient, mLocationRequest, this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
 
@@ -272,8 +270,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onStop() {
         super.onStop();
 
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         String userId = FirebaseAuth.getInstance().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driverAvailable");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
 
 
         GeoFire geoFire = new GeoFire(ref);

@@ -99,7 +99,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean driverFound = false;
     private String driverFoundID;
     private void getClosestDriver(){
-        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driverAvailable");
+        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
 
         GeoFire geoFire = new GeoFire(driverLocation);
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
@@ -154,7 +154,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Marker mDriverMarker;
 
     private void getDriverLocation(){
-        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driverWorking").child(driverFoundID).child("l");
+        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -277,13 +277,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     @Override
     public void onLocationChanged(Location location) {
-        mLastLocation = location;
 
-        LatLng LatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if(getApplicationContext()!=null){
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+            mLastLocation = location;
 
+            LatLng LatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        }
     }
 
     //@Override
