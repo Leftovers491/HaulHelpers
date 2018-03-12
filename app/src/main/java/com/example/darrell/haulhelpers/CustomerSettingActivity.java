@@ -38,7 +38,7 @@ public class CustomerSettingActivity extends AppCompatActivity {
 
     private Button mBack, mConfirm;
 
-    private ImageView mProfileImage;
+   // private ImageView mProfileImage;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mCustomerDatabase;
@@ -46,9 +46,9 @@ public class CustomerSettingActivity extends AppCompatActivity {
     private String userID;
     private String mName;
     private String mPhone;
-    private String mProfileImageUrl;
+  //  private String mProfileImageUrl;
 
-    private Uri resultUri;
+   // private Uri resultUri;
 
 
     @Override
