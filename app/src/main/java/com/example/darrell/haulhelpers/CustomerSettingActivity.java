@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -170,6 +171,7 @@ public class CustomerSettingActivity extends AppCompatActivity {
 //            finish();
 //        }
         finish();
+
     }
 
 //    @Override
@@ -178,8 +180,7 @@ public class CustomerSettingActivity extends AppCompatActivity {
 //        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
 //            final Uri imageUri = data.getData();
 //            resultUri = imageUri;
-//            //mProfileImage.setImageURI(resultUri);
+//            mProfileImage.setImageURI(resultUri);
 //        }
 //    }
 }
-
