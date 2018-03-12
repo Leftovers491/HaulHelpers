@@ -53,7 +53,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private LatLng pickupLocation;
     private Button mLogout, mSettings;
     private Button mRequest;
-    private Boolean requestBol; //Cancel Request
+    private Boolean requestBol= false; //Cancel Request
     private Marker pickupMarker;
 
     @Override
