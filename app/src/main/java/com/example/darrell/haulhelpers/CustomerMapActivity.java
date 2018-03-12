@@ -51,7 +51,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     LocationRequest mLocationRequest;
 
     private LatLng pickupLocation;
-    private Button mLogout;
+    private Button mLogout, mSettings;
     private Button mRequest;
     private Boolean requestBol; //Cancel Request
     private Marker pickupMarker;
@@ -67,6 +67,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mRequest = (Button) findViewById(R.id.request);
         mLogout = (Button) findViewById(R.id.logout);
+        mSettings = (Button) findViewById(R.id.settings);
+
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +125,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
+
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingActivity.class);
+                startActivity(intent);
+                return;
+            }
+        });
+
+
     }
 
     //int Kilometers
