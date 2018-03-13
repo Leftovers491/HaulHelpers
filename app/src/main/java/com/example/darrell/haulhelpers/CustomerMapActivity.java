@@ -115,6 +115,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     if(pickupMarker != null){
                         pickupMarker.remove();
+                        mRequest.setText("Request Driver");
+
                     }
                 }
                 else {
