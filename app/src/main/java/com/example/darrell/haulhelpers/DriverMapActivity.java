@@ -16,6 +16,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -38,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Map;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
@@ -49,19 +53,33 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Boolean isLoggingOut = false;
 
     private Button mLogout;
+    private LinearLayout mCustomerInfo;
+    private ImageView mCustomerProfileImage;
+    private TextView mCustomerName, mCustomerPhone;
+
+
 
     private String customerID = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mCustomerInfo = (LinearLayout) findViewById(R.id.customerInfo);
+
+        mCustomerProfileImage = (ImageView) findViewById(R.id.customerProfileImage);
+        mCustomerName = (TextView) findViewById(R.id.customerName);
+        mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
+
+
+
         mLogout = (Button) findViewById(R.id.logout);
+
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +106,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 if(dataSnapshot.exists()){
                     customerID = dataSnapshot.getValue().toString();
                     getAssignedCustomerPickupLocation();
+                    getAssignedCustomerInfo();
+
                 }else{
                     customerID = "";
                     if(pickupMarker !=null){
@@ -96,6 +116,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if(assignedCustomerPickupLocationRefListner !=null){
                         assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListner);
                     }
+                    mCustomerInfo.setVisibility(View.GONE);
+                    mCustomerName.setText("");
+                    mCustomerPhone.setText("");
+                    mCustomerProfileImage.setImageResource(R.drawable.ic_action_user);
                 }
 
             }
@@ -144,6 +168,31 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
+    private void getAssignedCustomerInfo(){
+        mCustomerInfo.setVisibility(View.VISIBLE);
+        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerID);
+        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("name")!=null){
+                        mCustomerName.setText(map.get("name").toString());
+                    }
+                    if(map.get("phone")!=null){
+                        mCustomerPhone.setText(map.get("phone").toString());
+                    }
+//                    if(map.get("profileImageUrl")!=null){
+//                        Glide.with(getApplication()).load(mProfileImageUrl).into(mCustomerProfileImage);
+//                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
 
     /**
