@@ -55,7 +55,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Button mLogout;
     private LinearLayout mCustomerInfo;
     private ImageView mCustomerProfileImage;
-    private TextView mCustomerName, mCustomerPhone;
+    private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
 
 
 
@@ -75,9 +75,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerProfileImage = (ImageView) findViewById(R.id.customerProfileImage);
         mCustomerName = (TextView) findViewById(R.id.customerName);
         mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
-
-
-
+        mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
         mLogout = (Button) findViewById(R.id.logout);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
@@ -99,13 +97,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getAssignedCustomer(){
         String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRideID");
+        final DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRequest").child("customerRideID");
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     customerID = dataSnapshot.getValue().toString();
                     getAssignedCustomerPickupLocation();
+                    getAssignedCustomerDestination();
                     getAssignedCustomerInfo();
 
                 }else{
@@ -119,7 +118,30 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     mCustomerInfo.setVisibility(View.GONE);
                     mCustomerName.setText("");
                     mCustomerPhone.setText("");
+                    mCustomerDestination.setText("Destination : --");
                     mCustomerProfileImage.setImageResource(R.drawable.ic_action_user);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+
+    private void getAssignedCustomerDestination(){
+        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRequest").child("destination");
+        assignedCustomerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String destination = dataSnapshot.getValue().toString();
+                    mCustomerDestination.setText("Destination : "+destination);
+                }else{
+                    mCustomerDestination.setText("Destination : --");
                 }
 
             }

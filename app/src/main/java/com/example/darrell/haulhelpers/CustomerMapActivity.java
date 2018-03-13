@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,8 +24,12 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,8 +58,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private LatLng pickupLocation;
     private Button mLogout, mSettings;
     private Button mRequest;
+
     private Boolean requestBol= false; //Cancel Request
+
     private Marker pickupMarker;
+
+    private String destination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +124,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     if(pickupMarker != null){
                         pickupMarker.remove();
+                        mDriverMarker.remove();
                         mRequest.setText("Request Driver");
 
                     }
@@ -134,6 +144,24 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     getClosestDriver();
                 }
 
+            }
+        });
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                destination = place.getName().toString();
+               // Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+              //  Log.i(TAG, "An error occurred: " + status);
             }
         });
     }
@@ -159,14 +187,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     driverFound = true;
                     driverFoundID = key;
 
-                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                     String customerID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     HashMap map = new HashMap();
                     map.put("customerRideID", customerID);
+                    map.put("destination", destination);
                     driverRef.updateChildren(map);
 
                     getDriverLocation();
-                    mRequest.setText("Looking for Driver...");
+                    mRequest.setText("Locating Driver...");
                 }
 
             }
