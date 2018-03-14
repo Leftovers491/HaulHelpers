@@ -417,9 +417,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
-    //for drawing a route part 21
+    //for drawing a route part 22
     private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+    private static final int[] COLORS = new int[]{R.color.dodgerblue};
 
     @Override
     public void onRoutingFailure(RouteException e) {
