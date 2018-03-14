@@ -266,7 +266,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverPhone.setText(map.get("phone").toString());
                     }
                     if(map.get("car")!=null){
-                        mDriverPhone.setText(map.get("car").toString());
+                        mDriverCar.setText(map.get("car").toString());
                     }
 //                    if(map.get("profileImageUrl")!=null){
 //                        Glide.with(getApplication()).load(mProfileImageUrl).into(mDriverProfileImage);

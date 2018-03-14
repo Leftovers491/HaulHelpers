@@ -137,7 +137,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
         Map userInfo = new HashMap();
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
-        userInfo.put("Car", mCar);
+        userInfo.put("car", mCar);
         mDriverDatabase.updateChildren(userInfo);
 
 //        if(resultUri != null) {
