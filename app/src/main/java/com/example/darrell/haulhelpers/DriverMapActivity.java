@@ -100,7 +100,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onClick(View view) {
                 Intent intent = new Intent(DriverMapActivity.this, DriverSettingsActivity.class);
                 startActivity(intent);
-                finish();
                 return;
 
             }
