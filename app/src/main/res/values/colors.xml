@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name= "rippleEffectColor">#f816a463</color>
+    <color name="cyan">#00FFFF</color>
+    <color name="dodgerblue">#1E90FF</color>
+
 </resources>
