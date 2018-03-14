@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -241,9 +242,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if(map.get("phone")!=null){
                         mCustomerPhone.setText(map.get("phone").toString());
                     }
-//                    if(map.get("profileImageUrl")!=null){
-//                        Glide.with(getApplication()).load(mProfileImageUrl).into(mCustomerProfileImage);
-//                    }
+                    if(map.get("profileImageUrl")!=null){
+                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
+                    }
                 }
             }
 

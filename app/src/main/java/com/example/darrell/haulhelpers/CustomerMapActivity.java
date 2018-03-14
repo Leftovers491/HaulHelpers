@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -268,9 +269,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(map.get("car")!=null){
                         mDriverCar.setText(map.get("car").toString());
                     }
-//                    if(map.get("profileImageUrl")!=null){
-//                        Glide.with(getApplication()).load(mProfileImageUrl).into(mDriverProfileImage);
-//                    }
+                   if(map.get("profileImageUrl")!=null){
+                       Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mDriverProfileImage);
+                    }
                 }
             }
 
