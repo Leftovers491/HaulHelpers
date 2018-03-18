@@ -50,6 +50,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +110,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                         break;
                     case 2:
-
+                       // recordRide();
                         endRide();
 
                         break;
@@ -410,6 +411,25 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerProfileImage.setImageResource(R.drawable.ic_action_user);
 
     }
+
+    private void recordRide(){
+
+        String userID  = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID).child("history");
+        DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerID).child("history");
+        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
+        String requestID = historyRef.push().getKey();
+        driverRef.child(requestID).setValue(true);
+        customerRef.child(requestID).setValue(true);
+
+        HashMap map = new HashMap();
+        map.put("driver", userID);
+        map.put("customer", customerID);
+        map.put("rating", 0);
+
+        historyRef.child(requestID).updateChildren(map);
+    }
+
 
     //@Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
