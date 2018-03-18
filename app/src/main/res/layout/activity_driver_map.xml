@@ -40,10 +40,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/customerInfo"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:background="@android:color/background_light"
-        android:visibility="gone">
-
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <ImageView
             android:layout_width="100sp"
             android:layout_height="100sp"
@@ -75,6 +78,13 @@
                 android:paddingBottom="10sp"
                 android:paddingTop="20sp"/>
         </LinearLayout>
+    </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="pick customer"
+            android:id="@+id/rideStatus"/>
 
     </LinearLayout>
 </FrameLayout>

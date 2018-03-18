@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "752250204317-grsukugr8rdvn1ds56jk66nk0kk8nm42.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.darrell.haulhelpers",
+            "certificate_hash": "25d43cb9e773dd4f37fcc67f273f8803831cda7a"
+          }
+        },
+        {
           "client_id": "752250204317-fq6s8490bd3cp9mqj9jfc5d6943umel1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
