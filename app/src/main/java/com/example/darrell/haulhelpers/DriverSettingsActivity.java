@@ -92,6 +92,10 @@ public class DriverSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+
+                Intent intent = new Intent(DriverSettingsActivity.this, DriverMapActivity.class);
+                startActivity(intent);
+
                 return;
             }
         });
@@ -177,8 +181,12 @@ public class DriverSettingsActivity extends AppCompatActivity {
             });
         }else{
             finish();
+            Intent intent = new Intent(DriverSettingsActivity.this, DriverMapActivity.class);
+            startActivity(intent);
         }
         finish();
+        Intent intent = new Intent(DriverSettingsActivity.this, DriverMapActivity.class);
+        startActivity(intent);
 
     }
 
