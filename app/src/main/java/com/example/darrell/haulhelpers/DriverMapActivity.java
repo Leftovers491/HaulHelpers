@@ -414,8 +414,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void recordRide(){
 
-        String userID  = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID).child("history");
+        String userId  = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("history");
         DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerID).child("history");
         DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
         String requestID = historyRef.push().getKey();
@@ -423,7 +423,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         customerRef.child(requestID).setValue(true);
 
         HashMap map = new HashMap();
-        map.put("driver", userID);
+        map.put("driver", userId);
         map.put("customer", customerID);
         map.put("rating", 0);
 

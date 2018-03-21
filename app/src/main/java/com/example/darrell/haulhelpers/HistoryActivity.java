@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class HistoryActivity extends AppCompatActivity {
+
     private String customerOrDriver, userId;
 
     private RecyclerView mHistoryRecyclerView;
@@ -49,7 +50,7 @@ public class HistoryActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.exists()){
-                    for(DataSnapshot history: dataSnapshot.getChildren()){
+                    for(DataSnapshot history : dataSnapshot.getChildren()){
                         FetchRideInformation(history.getKey());
                     }
                 }
@@ -89,6 +90,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private ArrayList resultsHistory = new ArrayList<HistoryObject>();
     private ArrayList<HistoryObject> getDataSetHistory(){
+
         return resultsHistory;
     }
 
