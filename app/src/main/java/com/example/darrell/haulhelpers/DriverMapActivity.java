@@ -73,7 +73,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private String customerID = "", destination;
 
-    private LatLng destinationLatLng;
+    private LatLng destinationLatLng, pickupLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,8 +232,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     }
 
 
-                    LatLng pickupLatLng = new LatLng(locationLat, locationLng);
-
+                    pickupLatLng = new LatLng(locationLat, locationLng);
                    pickupMarker =  mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location"));
                    getRouteToMarker(pickupLatLng);
                 }
@@ -248,7 +247,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void getRouteToMarker(LatLng pickupLatLng) {
-      //  if (pickupLatLng != null && mLastLocation != null){
+     // if (pickupLatLng != null && mLastLocation != null){
             Routing routing = new Routing.Builder()
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
                     .withListener(this)
@@ -428,6 +427,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         map.put("customer", customerID);
         map.put("rating", 0);
         map.put("timestamp", getCurrentTimestamp());
+        map.put("destination", destination);
+        map.put("location/from/lat", pickupLatLng.latitude);
+        map.put("location/from/lng", pickupLatLng.longitude);
+        map.put("location/to/lat", destinationLatLng.latitude);
+        map.put("location/to/lng", destinationLatLng.longitude);
         historyRef.child(requestID).updateChildren(map);
     }
 

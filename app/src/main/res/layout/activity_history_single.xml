@@ -35,7 +35,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Distance"
+            android:text="distance"
             android:layout_marginBottom="20sp"
             android:id="@+id/rideDistance"/>
 
@@ -43,7 +43,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="date"
             android:layout_marginBottom="20sp"
             android:id="@+id/rideDate"/>
 
@@ -75,7 +75,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="name"
                 android:layout_marginBottom="20sp"
                 android:id="@+id/userName"/>
 
@@ -83,7 +83,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Phone"
+                android:text="phone"
                 android:layout_marginBottom="20sp"
                 android:id="@+id/userPhone"/>
         </LinearLayout>
