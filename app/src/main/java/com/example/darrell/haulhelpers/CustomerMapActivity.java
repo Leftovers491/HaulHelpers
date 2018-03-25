@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -69,6 +70,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private String destination;
 
+    //private RatingBar mRatingBar;
 
     private LinearLayout mDriverInfo;
     private ImageView mDriverProfileImage;

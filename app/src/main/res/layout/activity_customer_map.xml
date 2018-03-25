@@ -103,6 +103,7 @@
                 android:id="@+id/driverCar"
                 android:paddingBottom="10sp"
                 android:paddingTop="20sp"/>
+
             </LinearLayout>
 
         </LinearLayout>
