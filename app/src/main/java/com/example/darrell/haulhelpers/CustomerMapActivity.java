@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -70,7 +71,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private String destination;
 
-    //private RatingBar mRatingBar;
+    private RatingBar mRatingBar;
 
     private LinearLayout mDriverInfo;
     private ImageView mDriverProfileImage;
@@ -97,6 +98,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverName = (TextView) findViewById(R.id.driverName);
         mDriverPhone = (TextView) findViewById(R.id.driverPhone);
         mDriverCar = (TextView) findViewById(R.id.driverCar);
+
+        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,6 +262,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                    if(map.get("profileImageUrl")!=null){
                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mDriverProfileImage);
+                    }
+
+                    int ratingSum = 0;
+                    float ratingTotal = 0;
+                    float ratingAvg = 0;
+                    for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
+                        ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
+                        ratingTotal++;
+                    }
+                    if( ratingTotal != 0){
+                        ratingAvg = ratingSum/ratingTotal;
+                        mRatingBar.setRating(ratingAvg);
                     }
                 }
             }
