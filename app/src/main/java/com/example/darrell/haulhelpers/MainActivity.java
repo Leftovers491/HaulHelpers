@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         mDriver = (Button) findViewById(R.id.driver);
         mCustomer = (Button) findViewById(R.id.customer);
 
+        startService(new Intent(MainActivity.this, onAppKilled.class));
+
 
         mDriver.setOnClickListener(new View.OnClickListener() {
             @Override

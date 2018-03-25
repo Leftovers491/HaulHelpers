@@ -6,29 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.darrell.haulhelpers.DriverMapActivity" >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/logout"
-        android:text="logout"/>
 
-    <Button
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/settings"
-        android:text="Settings"/>
-    <!--
-    <Button
-        android:layout_weight="1"
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/settings"
-        android:text="Settings"/>
 
-        //NOTE STILL WORKIng on -andy part of part 20
-        -->
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -38,11 +17,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/logout"
+                android:text="logout"/>
+
+            <Button
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settings"
+                android:text="Settings"/>
+
+        </LinearLayout>
+        
+         <Switch
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Working"
+             android:layout_margin="10sp"
+             android:id="@+id/workingSwitch"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/customerInfo"
         android:layout_gravity="bottom"
         android:orientation="vertical"
         android:background="@android:color/background_light"
-        android:visibility="visible">
+        android:visibility="gone">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

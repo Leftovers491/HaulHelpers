@@ -16,8 +16,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Boolean isLoggingOut = false;
 
     private Button mLogout, mSettings, mRideStatus;
+
+    private Switch mWorkingSwitch;
+
     private int status=0;
     private LinearLayout mCustomerInfo;
     private ImageView mCustomerProfileImage;
@@ -89,6 +94,22 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerName = (TextView) findViewById(R.id.customerName);
         mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
         mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
+
+        mWorkingSwitch = (Switch) findViewById(R.id.workingSwitch);
+        mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                statusCheck();
+                onPause();
+                onResume();
+                if(isChecked){
+                    connectDriver();
+                }
+                else
+                    disconnectDriver();
+            }
+        });
+
 
         mSettings = (Button) findViewById(R.id.settings);
         mLogout = (Button) findViewById(R.id.logout);
@@ -303,7 +324,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             return;
         }
 
-        this.statusCheck();
+        //this.statusCheck();
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
     }
@@ -412,6 +433,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
+
     private void recordRide(){
 
         String userId  = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -466,11 +488,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
 
@@ -482,6 +500,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void connectDriver() {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
     private void disconnectDriver(){
@@ -498,11 +525,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if(!isLoggingOut){
-            disconnectDriver();
-        }
+    public void onBackPressed(){
+        super.onBackPressed();
+        disconnectDriver();
+
     }
 
 

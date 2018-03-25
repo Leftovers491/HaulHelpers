@@ -181,12 +181,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
             });
         }else{
             finish();
-            Intent intent = new Intent(DriverSettingsActivity.this, DriverMapActivity.class);
-            startActivity(intent);
         }
         finish();
-        Intent intent = new Intent(DriverSettingsActivity.this, DriverMapActivity.class);
-        startActivity(intent);
+
 
     }
 
