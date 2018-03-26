@@ -69,6 +69,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Switch mWorkingSwitch;
 
+    private float rideDistance;
+
     private int status=0;
     private LinearLayout mCustomerInfo;
     private ImageView mCustomerProfileImage;
@@ -375,6 +377,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         if (getApplicationContext() != null){
 
+            if(!customerID.equals("")){
+
+                rideDistance += mLastLocation.distanceTo(location)/1000; //kilometers
+            }
+
             mLastLocation = location;
             LatLng LatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -417,7 +424,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(customerID);
+
         customerID = "";
+        rideDistance =0;
 
         if(pickupMarker != null){
             pickupMarker.remove();
@@ -425,6 +434,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         if(assignedCustomerPickupLocationRefListner !=null){
             assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListner);
         }
+
         mCustomerInfo.setVisibility(View.GONE);
         mCustomerName.setText("");
         mCustomerPhone.setText("");
@@ -454,6 +464,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         map.put("location/from/lng", pickupLatLng.longitude);
         map.put("location/to/lat", destinationLatLng.latitude);
         map.put("location/to/lng", destinationLatLng.longitude);
+        map.put("distance", rideDistance);
         historyRef.child(requestID).updateChildren(map);
     }
 
