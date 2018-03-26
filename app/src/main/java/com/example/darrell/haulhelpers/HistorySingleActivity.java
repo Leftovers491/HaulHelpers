@@ -43,6 +43,10 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     private String rideId, currentUserId, customerId, driverId, userDriverOrCustomer;
 
+    private String distance;
+
+    private Double ridePrice;
+
     private TextView rideLocation;
     private TextView rideDistance;
     private TextView rideDate;
@@ -120,6 +124,11 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                         }
                         if(child.getKey().equals("rating")){
                             mRatingBar.setRating(Integer.valueOf(child.getValue().toString()));
+                        }
+                        if(child.getKey().equals("distance")){
+                            distance = child.getValue().toString();
+                            rideDistance.setText(distance.substring( 0, Math.min(distance.length(), 4)) + " km"); //kilometers
+                            ridePrice = Double.valueOf(distance) * 0.5; //Price of ride = 0.5 * distance
                         }
                         if(child.getKey().equals("destination")){
                             rideLocation.setText(child.getValue().toString());
