@@ -1,10 +1,13 @@
 package com.example.darrell.haulhelpers;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -32,7 +35,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -55,6 +63,8 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     private RatingBar mRatingBar;
 
+    private Button mPay;
+
     private ImageView userImage;
 
     private GoogleMap mMap;
@@ -68,6 +78,10 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_single);
+
+        Intent intent = new Intent(this, PayPalService.class );
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startService(intent);
 
         polylines = new ArrayList<>();
 
@@ -85,6 +99,8 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         userImage = (ImageView) findViewById(R.id.userImage);
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        mPay = findViewById(R.id.pay);
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -155,6 +171,8 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     private void displayCustomerRelatedObjects() {
 
         mRatingBar.setVisibility(View.VISIBLE);
+        mPay.setVisibility(View.VISIBLE);
+
         mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -164,7 +182,54 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                 mDriverRatingDb.child(rideId).setValue(rating);
             }
         });
+
+        mPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                payPalPayment();
+            }
+        });
     }
+
+
+    private int PAYPAL_REQUEST_CODE = 1;
+    private static PayPalConfiguration config = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(PayPalConfig.PAYPAL_CLIENT_ID);
+
+    private void payPalPayment(){
+
+        PayPalPayment payment = new PayPalPayment( new BigDecimal(ridePrice), "USD", "HaulHelper Ride", PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+
+    }
+
+
+    @Override
+    protected void  onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PAYPAL_REQUEST_CODE){
+
+            if( resultCode == Activity.RESULT_OK){
+
+            }else {
+                Toast.makeText(getApplicationContext(), "Payment Unsuccessful", Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+    @Override
+    protected void onDestroy(){
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
+    }
+
 
     private void getUserInformation(String otherUserDriverOrCustomer, String otherUserId) {
 
