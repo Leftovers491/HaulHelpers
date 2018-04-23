@@ -18,12 +18,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class CustomerLoginActivity extends AppCompatActivity {
+    //Variables for XML view, email, password, logins activity.
     private EditText mEmail, mPassword;
     private Button mLogin, mRegistration, mForgot, btnBack;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+    //method to start up when Customer Logs in.
+    /*
+    * Method instantiates the authentication for firebase and creates a user session based on the user's detail.
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +36,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        //creates session for user based on credentials.
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -44,6 +50,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
             }
         };
 
+        //View finders for the XML for registering a user.
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         mForgot= (Button) findViewById(R.id.forgot);
@@ -52,9 +59,14 @@ public class CustomerLoginActivity extends AppCompatActivity {
         mLogin = (Button) findViewById(R.id.login);
         mRegistration = (Button) findViewById(R.id.registration);
 
+        /*
+        * This allows a user to register on our application.
+        * Creates a new user on firebase and stores it in a table.
+        * */
         mRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //grabs the text from the buttons
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
                 if( email.isEmpty()|| password.isEmpty()){
@@ -78,7 +90,9 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
             }
         });
-
+        /*
+        * Logs the user in using the credentials,, and checks with database.
+        * */
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +115,8 @@ public class CustomerLoginActivity extends AppCompatActivity {
             }
         });
 
-
+        /*
+        * This method allows user to reset their password*/
         mForgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +126,8 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 return;
             }
         });
-
+        /*
+        * This method allows user to get the homepage*/
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,11 +141,17 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
 
     }
+    /*
+    * This method begins for a user when they start customer activity
+    * */
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
     }
+    /*
+    * This removes a user from session when they leave the customer login.
+    * */
     @Override
     protected void onStop() {
         super.onStop();
