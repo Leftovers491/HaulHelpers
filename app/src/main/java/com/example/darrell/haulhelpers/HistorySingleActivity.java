@@ -39,6 +39,10 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -54,6 +58,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     private String distance;
 
     private Double ridePrice;
+    private Boolean customerPaid = false;
 
     private TextView rideLocation;
     private TextView rideDistance;
@@ -141,6 +146,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                         if(child.getKey().equals("rating")){
                             mRatingBar.setRating(Integer.valueOf(child.getValue().toString()));
                         }
+                        if (child.getKey().equals("customerPaid")){
+                            customerPaid =true;
+                        }
                         if(child.getKey().equals("distance")){
                             distance = child.getValue().toString();
                             rideDistance.setText(distance.substring( 0, Math.min(distance.length(), 4)) + " km"); //kilometers
@@ -183,6 +191,12 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             }
         });
 
+        if(customerPaid){
+            mPay.setEnabled(false);
+        }else{
+            mPay.setEnabled(true);
+        }
+
         mPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,6 +230,26 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         if(requestCode == PAYPAL_REQUEST_CODE){
 
             if( resultCode == Activity.RESULT_OK){
+
+                PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if(confirm != null){
+                    try {
+                        JSONObject jsonObj = new JSONObject(confirm.toJSONObject().toString());
+
+                        String paymentResponse = jsonObj.getJSONObject("response").getString("state");
+
+                        if(paymentResponse.equals("approved")){
+                            Toast.makeText(getApplicationContext(), "Payment successful", Toast.LENGTH_LONG).show();
+                            historyRideInfoDb.child("customerPaid").setValue(true);
+                            mPay.setEnabled(false);
+                        }
+
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                }
 
             }else {
                 Toast.makeText(getApplicationContext(), "Payment Unsuccessful", Toast.LENGTH_LONG).show();
