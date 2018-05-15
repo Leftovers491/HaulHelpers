@@ -17,7 +17,7 @@
             android:padding="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Balance: 0 USD"
+            android:text="Balance: 0 $"
             android:id="@+id/balance"
             android:visibility="gone"/>
         <EditText
@@ -32,17 +32,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/payout"/>
+
     </LinearLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/historyRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+            android:id="@+id/historyRecyclerView"
+            android:scrollbars="vertical">
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.NestedScrollView>
 

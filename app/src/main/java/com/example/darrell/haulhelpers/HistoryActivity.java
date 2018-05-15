@@ -49,19 +49,21 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView.Adapter mHistoryAdapter;
     private RecyclerView.LayoutManager mHistoryLayoutManager;
 
-    private Button mPayout;
-    private EditText mPayoutEmail;
-
     private TextView mBalance;
     private Double Balance = 0.0;
+
+    private Button mPayout;
+    private EditText mPayoutEmail;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
         mBalance = findViewById(R.id.balance);
+
         mPayout = findViewById(R.id.payout);
         mPayoutEmail = findViewById(R.id.payoutEmail);
+
 
         mHistoryRecyclerView = (RecyclerView) findViewById(R.id.historyRecyclerView);
         mHistoryRecyclerView.setNestedScrollingEnabled(false);
@@ -81,6 +83,7 @@ public class HistoryActivity extends AppCompatActivity {
             mPayoutEmail.setVisibility(View.VISIBLE);
         }
 
+
         mPayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,8 +91,6 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void getUserHistoryIds() {
 
@@ -101,9 +102,6 @@ public class HistoryActivity extends AppCompatActivity {
                 if(dataSnapshot.exists()){
                     for(DataSnapshot history : dataSnapshot.getChildren()){
                         FetchRideInformation(history.getKey());
-                        if( history.getValue().toString().equals("true")){
-                            FetchRideInformation(history.getKey());
-                        }
                     }
                 }
 
@@ -115,15 +113,12 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
-
     private void FetchRideInformation(String rideKey) {
-
         DatabaseReference historyDatabase = FirebaseDatabase.getInstance().getReference().child("history").child(rideKey);
         historyDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 if(dataSnapshot.exists()){
                     String rideId = dataSnapshot.getKey();
                     Long timestamp = 0L;
@@ -136,6 +131,8 @@ public class HistoryActivity extends AppCompatActivity {
 
                     if(dataSnapshot.child("customerPaid").getValue() != null && dataSnapshot.child("driverPaidOut").getValue() == null){
                         if(dataSnapshot.child("distance").getValue() != null){
+
+                           // distance = dataSnapshot.child("distance").getValue().toString();
                             ridePrice = Double.valueOf(dataSnapshot.child("price").getValue().toString());
                             Balance += ridePrice;
                             mBalance.setText("Balance: " + String.valueOf(Balance) + " $");
@@ -148,14 +145,12 @@ public class HistoryActivity extends AppCompatActivity {
                     mHistoryAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
     }
+
 
     private String getDate(Long timestamp) {
 
@@ -202,8 +197,6 @@ public class HistoryActivity extends AppCompatActivity {
                 .addHeader("Authorization", "Your Token")
                 .addHeader("cache-control", "no-cache")
                 .build();
-
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -218,12 +211,13 @@ public class HistoryActivity extends AppCompatActivity {
 
                 int responseCode = response.code();
 
+
                 if (response.isSuccessful())
                     switch (responseCode) {
                         case 200:
-                            Snackbar.make(findViewById(R.id.layout), "Payout Successful", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(R.id.layout), "Payout Successful!", Snackbar.LENGTH_LONG).show();
                             break;
-                        case 500:
+                        case 501:
                             Snackbar.make(findViewById(R.id.layout), "Error: no payout available", Snackbar.LENGTH_LONG).show();
                             break;
                         default:

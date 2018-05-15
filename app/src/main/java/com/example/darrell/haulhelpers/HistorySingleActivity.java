@@ -58,13 +58,14 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     private String distance;
 
     private Double ridePrice;
-    private Boolean customerPaid = false;
 
     private TextView rideLocation;
     private TextView rideDistance;
     private TextView rideDate;
     private TextView userName;
     private TextView userPhone;
+
+    private Boolean customerPaid = false;
 
     private RatingBar mRatingBar;
 
@@ -224,16 +225,13 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
 
     @Override
-    protected void  onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == PAYPAL_REQUEST_CODE){
-
-            if( resultCode == Activity.RESULT_OK){
-
+        if (requestCode == PAYPAL_REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
                 PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if(confirm != null){
-                    try {
+                    try{
                         JSONObject jsonObj = new JSONObject(confirm.toJSONObject().toString());
 
                         String paymentResponse = jsonObj.getJSONObject("response").getString("state");
@@ -243,26 +241,23 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                             historyRideInfoDb.child("customerPaid").setValue(true);
                             mPay.setEnabled(false);
                         }
-
-                    }
-                    catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
 
-            }else {
-                Toast.makeText(getApplicationContext(), "Payment Unsuccessful", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getApplicationContext(), "Payment unsuccessful", Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         stopService(new Intent(this, PayPalService.class));
         super.onDestroy();
     }
+
 
 
     private void getUserInformation(String otherUserDriverOrCustomer, String otherUserId) {

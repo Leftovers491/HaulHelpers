@@ -24,11 +24,11 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/logout"
-                android:text="logout"/>
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="logout" />
             <Button
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -37,12 +37,13 @@
                 android:text="history" />
 
             <Button
-                android:layout_weight="1"
-                android:layout_gravity="end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
                 android:id="@+id/settings"
-                android:text="Settings"/>
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:text="Settings" />
 
         </LinearLayout>
         
