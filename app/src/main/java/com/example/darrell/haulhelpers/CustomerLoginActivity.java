@@ -16,16 +16,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
+    /*
+    * Class contains the functions when a user clicks login on the application
+    * Generates a session auth listener which is how the client stays unique and connected
+    * When a client enters the login, their session is continued until they logout.
+    * */
 public class CustomerLoginActivity extends AppCompatActivity {
     //Variables for XML view, email, password, logins activity.
     private EditText mEmail, mPassword;
     private Button mLogin, mRegistration, mForgot, btnBack;
-
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth; //contains the firebase auth object that maintains users.
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
-    //method to start up when Customer Logs in.
     /*
     * Method instantiates the authentication for firebase and creates a user session based on the user's detail.
     * */
@@ -34,14 +36,14 @@ public class CustomerLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();//object for the customer attempting to login.
 
         //creates session for user based on credentials.
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); //attempts to find the current user accessing login.
+                if(user!=null) {//if user is !=null, then it will alow the user to login and access the map.
                     Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
                     startActivity(intent);
                     finish();
@@ -55,7 +57,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.password);
         mForgot= (Button) findViewById(R.id.forgot);
         btnBack = (Button) findViewById(R.id.btn_back);
-
         mLogin = (Button) findViewById(R.id.login);
         mRegistration = (Button) findViewById(R.id.registration);
 
@@ -155,7 +156,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
+        mAuth.removeAuthStateListener(firebaseAuthListener); //user removes itself from the auth session
     }
 
 }

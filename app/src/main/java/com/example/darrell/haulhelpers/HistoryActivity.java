@@ -40,9 +40,15 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 //import java.text.DateFormat;
 
-
+    /*
+    * Stores the history object and implements a recycler to manage the info stream of incoming ride history.
+    * manages the connection for user to pay for previous rides
+    * Sets the payout for each ride based on timestamp and distance
+    * */
 public class HistoryActivity extends AppCompatActivity {
-
+    /*
+    * Variables for the history of each ride object and buttons so a user can pay for previous rides.
+    * */
     private String customerOrDriver, userId;
 
     private RecyclerView mHistoryRecyclerView;
@@ -54,7 +60,10 @@ public class HistoryActivity extends AppCompatActivity {
 
     private Button mPayout;
     private EditText mPayoutEmail;
-
+    /*
+    * Grabs the information for the user requesting the history. If this is the driver, then payment system will be invisible.
+    * The customer will be able to see the ride balance due, and both types of user can view their history.
+    * */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
@@ -91,7 +100,9 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
-
+        /*
+        * Finds the ride id and displays it for the user
+        * */
     private void getUserHistoryIds() {
 
         DatabaseReference userHistoryDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(customerOrDriver).child(userId).child("history");
@@ -113,6 +124,9 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
+        /*
+    * Returns information from the database regarding specifics of the ride and also the cost.
+    * */
     private void FetchRideInformation(String rideKey) {
         DatabaseReference historyDatabase = FirebaseDatabase.getInstance().getReference().child("history").child(rideKey);
         historyDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -151,7 +165,9 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
-
+    /*
+    * Gets the data of timestamp and formats it more readable.
+    * */
     private String getDate(Long timestamp) {
 
         Calendar cal = Calendar.getInstance(Locale.getDefault());
@@ -171,6 +187,10 @@ public class HistoryActivity extends AppCompatActivity {
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     ProgressDialog progress;
+    /*
+    * Generates an action to complete payment via paypal by connecting to the haulhelper https client that manages payout queries.
+    * Creates the request based on the user's ride and processes their payment
+    * */
     private void payoutRequest() {
         progress = new ProgressDialog(this);
         progress.setTitle("Processing your payout");

@@ -9,7 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+/*
+* This is for the home screen of haul helpers and displays the buttons for making a login request.
+* Binds the view to the button so user can login as driver/customer.
+* Enforces user to enable location services before they can even login, else Mapping functions will not work.
+* */
 public class MainActivity extends AppCompatActivity {
     private Button mDriver, mCustomer;
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -52,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    * Stores the location services permission and allows the app to now access users location.
+    * */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 

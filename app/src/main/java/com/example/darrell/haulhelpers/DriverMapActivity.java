@@ -55,14 +55,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+    /*
+    * Contains the driver's map object. It also contains the driver's functionality including entering/exiting  "driver working mode"
+    * Contains location information of the driver, and generates the shortest path to a customer's destination, and customer's ride destination.
+    * */
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, RoutingListener {
-
+    /*
+    * google Class to generate a map object per customer activity.
+    * stores the last location of user
+    * grabs destination input
+    * */
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
+    //buttons for driver features such as settings, logout, history.
     private Boolean isLoggingOut = false;
 
     private Button mLogout, mSettings, mRideStatus, mHistory;
@@ -81,7 +89,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String customerID = "", destination;
 
     private LatLng destinationLatLng, pickupLatLng;
-
+    /*
+    * Finds the customers information and displays it to driver
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +153,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 }
             }
         });
-
+        /*
+        * Logs out the current user
+        * */
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,7 +170,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 return;
             }
         });
-
+        /*
+        * Starts settings activity for user
+        * */
         mSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,6 +183,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        /*
+        * Begins history function
+        * */
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +199,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         getAssignedCustomer();
     }
-
+    /*
+    * Finds the assigned customer and locates the user, stores the ride information to database
+    * */
     private void getAssignedCustomer(){
         String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRequest").child("customerRideID");
@@ -208,7 +227,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-
+    /*
+    * Locates the customer's location that they want to arrive to and sets the logitude and latitude.
+    * */
     private void getAssignedCustomerDestination(){
         String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRequest");
@@ -248,7 +269,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Marker pickupMarker;
     private DatabaseReference assignedCustomerPickupLocationRef;
     private ValueEventListener assignedCustomerPickupLocationRefListner;
-
+    /*
+    * Finds the location of customer request and generates a route for the driver to the customer.
+    * */
     private void getAssignedCustomerPickupLocation(){
         assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerID).child("l");
         assignedCustomerPickupLocationRefListner = assignedCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
@@ -281,7 +304,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
 
     }
-
+    /*
+    * Finds the shortest route to the customer/destination
+    * */
     private void getRouteToMarker(LatLng pickupLatLng) {
      // if (pickupLatLng != null && mLastLocation != null){
             Routing routing = new Routing.Builder()
@@ -294,7 +319,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
        // }
     }
 
-
+        /*
+        * Displays customer detail to driver
+        * */
     private void getAssignedCustomerInfo(){
         mCustomerInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerID);
@@ -343,7 +370,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
     }
-
+        /*
+        * Starts google's map features
+        * */
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -352,7 +381,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 .build();
         mGoogleApiClient.connect();
     }
-
+        /*
+        * Makes the user enable location service to enable GPS tracking and location services for Haulhelpers.
+        * */
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -366,7 +397,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             buildAlertMessageNoGps();
         }
     }
-
+        /*
+        * Alerts user to enable their location service, and routes the user to their system setting.
+        * */
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -384,7 +417,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         final AlertDialog alert = builder.create();
         alert.show();
     }
-
+        /*
+        * Updates the location when either a customer or driver is moves.
+        * */
     @Override
     public void onLocationChanged(Location location) {
 
@@ -424,7 +459,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-
+        /*
+        * Removes all ride related information to current user, including markers.
+        * */
     private void endRide(){
 
         mRideStatus.setText("pick customer");
@@ -456,7 +493,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-
+        /*
+        * Stores the ride session of a customer and updates it to the database.
+        * Associates that ride infor to that particular customer and adds the timestamp/id of the ride.
+        * */
     private void recordRide(){
 
         String userId  = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -556,7 +596,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
-    //for drawing a route part 22
+    //Contains the set of lines regarding the path to a ride.
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.dodgerblue};
 
@@ -573,7 +613,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onRoutingStart() {
 
     }
-
+        /*
+        * Generates a route when found to the customer, and displays this route to the driver.
+        * Poly graph builds the lines for the route which then displays it to the user
+        * */
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
         if(polylines.size()>0) {
@@ -605,6 +648,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onRoutingCancelled() {
 
     }
+    /*
+    * Removes the generated poly lines from the map
+    * */
     private void erasePolylines(){
         for(Polyline line : polylines){
             line.remove();

@@ -50,9 +50,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+    /*
+    * Contains the functions for an individual history object (ride).
+    * Displays the price, location, rating, and driver information for particular ride.
+    * */
 public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener {
-
+    /*
+    * Variables for the history of each ride object, map, and history of payment.
+    * */
     private String rideId, currentUserId, customerId, driverId, userDriverOrCustomer;
 
     private String distance;
@@ -79,7 +84,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     private DatabaseReference historyRideInfoDb;
 
     private LatLng destinationLatLng, pickupLatLng;
-
+        /*
+    * Variables for the history of each ride object and buttons so a user can pay for previous rides.
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +123,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         getRideInformation();
 
     }
-
+        /*
+        * Finds the ride information in the database for customer/driver and returns it, if a payment has been made it will update the database info
+        * */
     private void getRideInformation() {
 
         historyRideInfoDb.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -176,7 +185,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             }
         });
     }
-
+        /*
+        * Sets the customer's history view for their ride, and sets a payment view if they have not paid
+        * */
     private void displayCustomerRelatedObjects() {
 
         mRatingBar.setVisibility(View.VISIBLE);
@@ -223,7 +234,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-
+        /*
+        * Saves the payment of the ride history and updates teh database.
+        * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -259,7 +272,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     }
 
 
-
+        /*
+        * Returns all the relevant information for user's profile
+        * */
     private void getUserInformation(String otherUserDriverOrCustomer, String otherUserId) {
 
         DatabaseReference mOtherUserDB = FirebaseDatabase.getInstance().getReference().child("Users").child(otherUserDriverOrCustomer).child(otherUserId);
@@ -289,6 +304,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         });
     }
 
+        /*
+        * Gets the data of timestamp and formats it more readable.
+        * */
     private String getDate(Long timestamp) {
 
         Calendar cal = Calendar.getInstance(Locale.getDefault());
@@ -299,6 +317,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         return date;
     }
 
+        /*
+        * Finds the route that the ride used, and displays it
+        * */
     private void getRouteToMarker() {
         Routing routing = new Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
@@ -317,7 +338,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-    //for drawing a route part 22
+
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.dodgerblue};
 
@@ -335,6 +356,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     }
 
+        /*
+        * Displays the marker, location, and destination pathing for the ride history
+        * */
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
 
@@ -380,6 +404,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     }
 
+        /*
+        * removes ride routes from map
+        * */
     @Override
     public void onRoutingCancelled() {
 
