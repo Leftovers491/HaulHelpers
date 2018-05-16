@@ -18,7 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".onAppKilled" android:stopWithTask="false"/>
+        <service
+            android:name=".onAppKilled"
+            android:stopWithTask="false" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +51,8 @@
         <activity android:name=".CustomerMapActivity" />
         <activity android:name=".DriverSettingsActivity" />
         <activity android:name=".HistoryActivity" />
-        <activity android:name=".HistorySingleActivity"></activity>
+        <activity android:name=".HistorySingleActivity" />
+        <activity android:name=".dailog_lengthWidth"></activity>
     </application>
 
 </manifest>

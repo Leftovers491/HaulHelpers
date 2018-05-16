@@ -26,7 +26,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 public class DriverSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField, mCarField;
+    private EditText mNameField, mPhoneField, mCarField, mLengthField, mWidthField;
 
     private Button mBack, mConfirm;
 
@@ -47,6 +46,8 @@ public class DriverSettingsActivity extends AppCompatActivity {
     private String mName;
     private String mPhone;
     private String mCar;
+    private String mLength;
+    private String mWidth;
       private String mProfileImageUrl;
 
      private Uri resultUri;
@@ -60,6 +61,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
         mCarField = (EditText) findViewById(R.id.car);
+        mLengthField = (EditText) findViewById(R.id.length);
+        mWidthField = (EditText) findViewById(R.id.width);
+
 
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
 
@@ -117,10 +121,18 @@ public class DriverSettingsActivity extends AppCompatActivity {
                     if(map.get("car")!=null){
                         mCar = map.get("car").toString();
                         mCarField.setText(mCar);
-                  }
+                    }
                     if(map.get("profileImageUrl")!=null){
                         mProfileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
+                    }
+                    if(map.get("length")!=null){
+                        mLength = map.get("length").toString();
+                        mLengthField.setText(mLength);
+                    }
+                    if(map.get("width")!=null){
+                        mWidth = map.get("width").toString();
+                        mWidthField.setText(mWidth);
                     }
               }
             }
@@ -137,11 +149,15 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mName = mNameField.getText().toString();
         mPhone = mPhoneField.getText().toString();
         mCar = mCarField.getText().toString();
+        mLength = mLengthField.getText().toString();
+        mWidth = mWidthField.getText().toString();
 
         Map userInfo = new HashMap();
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
         userInfo.put("car", mCar);
+        userInfo.put("length", mLength);
+        userInfo.put("width", mWidth);
         mDriverDatabase.updateChildren(userInfo);
 
         if(resultUri != null) {
