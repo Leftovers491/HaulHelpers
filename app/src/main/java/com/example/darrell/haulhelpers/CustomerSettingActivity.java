@@ -31,26 +31,30 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+    /*
+    * Stores the customer's setting object and information to generate a profile for a user.
+    * */
 public class CustomerSettingActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField;
-
     private Button mBack, mConfirm;
-
     private ImageView mProfileImage;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mCustomerDatabase;
-
+    /*
+    * Variables to hold customer information
+    * */
     private String userID;
     private String mName;
     private String mPhone;
     private String mProfileImageUrl;
-
+    //stores profile image
     private Uri resultUri;
 
-
+    /*
+    * Grabs the customer's information and allow for user to modify it.
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +98,9 @@ public class CustomerSettingActivity extends AppCompatActivity {
             }
         });
     }
+    /*
+    * Removes driver from the customer's request and allows driver to find another rider.
+    * */
     private void getUserInfo(){
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
             @Override

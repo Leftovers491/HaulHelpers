@@ -52,32 +52,39 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+    /*
+    * This class contains the map for a customer along with functionality regarding a customer ONLY.
+    * The customermap allows for rating,  logging out, generating a request for a ride, and viewing their ride history.
+    * */
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
-    private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    LocationRequest mLocationRequest;
 
-    private LatLng destinationLatLng;
-    private LatLng pickupLocation;
-    private Button mLogout, mSettings, mHistory;
-    private Button mRequest;
+    private GoogleMap mMap;//google Class to generate a map object per customer activity.
+    GoogleApiClient mGoogleApiClient; //contains the functionality of google's location requesst.
+    Location mLastLocation; //stores the last location of user
+    LocationRequest mLocationRequest; //stores the position of location
+    private String destination;//grabs destination input
+
+    private LatLng destinationLatLng; //destination of ride in longitude/latitude
+    private LatLng pickupLocation; //destination of rider pickup
+    private Button mLogout, mSettings, mHistory; //buttons for login function
 
     private Boolean requestBol= false; //Cancel Request
+    private Marker pickupMarker; //marker object to place on map
 
-    private Marker pickupMarker;
-
-    private String destination;
-
+    /*
+    * Stores the driver's information and grabs these details when a user is getting picked up
+    * */
     private RatingBar mRatingBar;
-
     private LinearLayout mDriverInfo;
     private ImageView mDriverProfileImage;
     private TextView mDriverName, mDriverPhone, mDriverCar;
+    private Button mRequest;
 
-
+    /*
+    * Generates the customer map activity for a user object when they have logged in.
+    * Stores the data for driver, request, settings, history, rating for the logged in user.
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +108,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
+        /*
+        * Logs out the current user
+        * */
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +121,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 return;
             }
         });
-
+        /*
+        * Starts settings activity for user
+        * */
         mSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +133,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-
+        /*
+        * Creates a request object based on user and also sets the location by using Goog's geofire object.
+        * Sets a pick up marker when a user makes a request abd activates a function to grab the closest driver.
+        * */
         mRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,7 +161,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
-
+        /*
+        * History activity begins when the driver clicks on the history button
+        * */
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,6 +174,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        /*
+        * This activates a series of queries for when a user searches for a location using our navigation bar.
+        * */
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -177,20 +197,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
-    //int Kilometers
+    //variables to store driver status
     private int radius = 1;
     private Boolean driverFound = false;
     private String driverFoundID;
 
-    GeoQuery geoQuery;
-
+    GeoQuery geoQuery; //query object to find closest driver on google map
+    /*
+    * Finds the closest driver to the current user requesting a rides
+    * */
     private void getClosestDriver(){
-        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");//stores list of available drivers and the location
 
-        GeoFire geoFire = new GeoFire(driverLocation);
-        geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
+        GeoFire geoFire = new GeoFire(driverLocation);//finds the driver's location
+        geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius); //updates the drivers location
         geoQuery.removeAllListeners();
 
+        /*
+        * Handles the ride request events. This function will look if there are any available drivers in the system so it can  store that them on a hashmap.
+        * The rider will receive the closest driver then the map will be updated with  information of the driver's location.
+        * */
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
@@ -224,7 +250,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onKeyMoved(String key, GeoLocation location) {
 
             }
-
+            /*
+            * Recursively finds a nearby driver
+            * */
             @Override
             public void onGeoQueryReady() {
                 if(!driverFound){
@@ -242,11 +270,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
-
+    /*
+    * Returns all the driver information based on the hashmap of assigned driver.
+    * */
     private void getDriverInfo(){
         mDriverInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            /*
+            * Updates driver information based on database refreshes.
+            * */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
@@ -267,10 +300,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     int ratingSum = 0;
                     float ratingTotal = 0;
                     float ratingAvg = 0;
+                    //Updates the rating for driver when it is changed
                     for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
                         ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
                         ratingTotal++;
                     }
+                    /*
+                    * Averages the rating for the drivers
+                    * */
                     if( ratingTotal != 0){
                         ratingAvg = ratingSum/ratingTotal;
                         mRatingBar.setRating(ratingAvg);
@@ -286,7 +323,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 private DatabaseReference driveHasEndedRef;
     private ValueEventListener driveHasEndedRefListener;
-
+        /*
+        * Checks if the driver has finished the route successfully and executes to end the rides
+        * */
     private void getHasRideEnded(){
         driveHasEndedRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest").child("customerRideID");
         driveHasEndedRefListener = driveHasEndedRef.addValueEventListener(new ValueEventListener() {
@@ -306,8 +345,14 @@ private DatabaseReference driveHasEndedRef;
         });
     }
 
+    /*
+    * Removes driver from the customer's request and allows driver to find another rider.
+    * Resets all the markers made from a driver and customer and the current driver information from the customer's view.
+    * */
     private void endRide(){
-
+        /*
+        * Sets driver back to available
+        * */
         requestBol = false;
         geoQuery.removeAllListeners();
         driverLocationRef.removeEventListener(driverLocationRefListener);
@@ -348,7 +393,9 @@ private DatabaseReference driveHasEndedRef;
     private Marker mDriverMarker;
     private DatabaseReference driverLocationRef;
     private ValueEventListener driverLocationRefListener;
-
+    /*
+    * Finds the location of the driver to return that information to the customer.
+    * */
     private void getDriverLocation(){
         driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
@@ -431,6 +478,9 @@ private DatabaseReference driveHasEndedRef;
         mMap.setMyLocationEnabled(true);
     }
 
+    /*
+    * Creates a client to use google's services including location.
+    * */
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -439,7 +489,9 @@ private DatabaseReference driveHasEndedRef;
                 .build();
         mGoogleApiClient.connect();
     }
-
+    /*
+    * Makes the customer enable location service to enable GPS tracking and location services for Haulhelpers.
+    * */
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -453,7 +505,9 @@ private DatabaseReference driveHasEndedRef;
             buildAlertMessageNoGps();
         }
     }
-
+    /*
+    * Alerts user to enable their location service, and routes the user to their system setting.
+    * */
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -471,7 +525,9 @@ private DatabaseReference driveHasEndedRef;
         final AlertDialog alert = builder.create();
         alert.show();
     }
-
+    /*
+    * Updates the location when either a customer or driver is moves.
+    * */
     @Override
     public void onLocationChanged(Location location) {
 
@@ -502,7 +558,7 @@ private DatabaseReference driveHasEndedRef;
     }
 
     /*
-    Map is ready to be connected
+    * Generates the connection for location services and allows the user to now use map features
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {

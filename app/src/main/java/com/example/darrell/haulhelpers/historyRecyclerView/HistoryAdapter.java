@@ -12,13 +12,14 @@ import com.example.darrell.haulhelpers.R;
 import java.util.List;
 
 /**
- * Created by 013416011 on 3/19/18.
+ * History classs to store objects containing timestamp, user, and the list of transactions made regarding trips.
  */
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolders> {
-
+    //stores a list of hisstory objects
     private List<HistoryObject> itemList;
-    private Context context;
+
+    private Context context;//object for which the history will pertain to
 
     public HistoryAdapter(List<HistoryObject> itemList, Context context){
 
@@ -27,7 +28,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolders> {
 
     }
 
-
+    /*
+    * Generates a history with view holder and binds the layout.
+    * Sets layout based on specific user that is requesting history
+    * */
     @Override
     public HistoryViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -39,6 +43,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolders> {
         return rvc;
     }
 
+    /*
+    * Finds the time and id for ride, and grabs the ID for the request.
+    * */
     @Override
     public void onBindViewHolder(HistoryViewHolders holder, int position) {
 
@@ -46,7 +53,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolders> {
         holder.time.setText(itemList.get(position).getTime());
 
     }
-
+    /*
+    * Returns the item list count
+    * */
     @Override
     public int getItemCount() {
 
