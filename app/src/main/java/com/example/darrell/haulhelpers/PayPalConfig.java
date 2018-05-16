@@ -1,8 +1,9 @@
 package com.example.darrell.haulhelpers;
 
-/**
- * Created by 013416011 on 4/9/18.
- */
+
+        /*
+        * Stores the client id for our paypal API system. This will authorize our app to use paypal's system by validating the ID to paypal's database.
+        * */
 
 public class PayPalConfig {
 

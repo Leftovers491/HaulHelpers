@@ -132,7 +132,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
     }
 
 
-
+    /*
+    * Stores the user information onto database and sets the profile information for a user. If user has no image, it will be a default image. s
+    * */
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
         mPhone = mPhoneField.getText().toString();
@@ -143,7 +145,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
         userInfo.put("phone", mPhone);
         userInfo.put("car", mCar);
         mDriverDatabase.updateChildren(userInfo);
-
+        /*
+        * Finds the profile image of user or assigns a default
+        * */
         if(resultUri != null) {
 
             StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userID);
@@ -186,7 +190,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
 
     }
-
+    /*
+    * Finishes setting the profile image for a user when using a custom file an uploads to the database. s
+    * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

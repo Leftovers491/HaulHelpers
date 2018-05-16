@@ -14,6 +14,10 @@ package com.example.darrell.haulhelpers;
         import com.google.android.gms.tasks.Task;
         import com.google.firebase.auth.FirebaseAuth;
 
+/*
+* Allows the user to reset their password based on the database on whether the database contains the email and if the user is registered to haulhelpers.
+* If user is registered, it will send a success email to that registered email for resetting the password.
+* */
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private EditText edtEmail;
@@ -57,6 +61,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
             }
         });
 
+
+        /*
+        * Returns user to main activity
+        * */
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

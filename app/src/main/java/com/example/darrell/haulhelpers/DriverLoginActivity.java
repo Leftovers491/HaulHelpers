@@ -20,6 +20,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Driver;
 
+    /*
+    * Performs all the driver login functions including logout, login, setting name,  etc.
+    * Creates a session for driver when they login, and saves that session via registration.
+    * The user can also register which will then push all driver data to the database for storage
+    * session ends when the driver logs out.
+    * */
 public class DriverLoginActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
     private Button mLogin, mRegistration, mForgot, btnBack;
@@ -46,14 +52,19 @@ public class DriverLoginActivity extends AppCompatActivity {
                 }
             }
         };
-
+        /*
+        * View objects for customer data and maps it to appropriate action
+        * */
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         mForgot= (Button) findViewById(R.id.forgot);
         btnBack = (Button) findViewById(R.id.btn_back);
         mLogin = (Button) findViewById(R.id.login);
         mRegistration = (Button) findViewById(R.id.registration);
-
+        /*
+        * Registers a user as a driver.
+        * If the user has empty parameters, the function will alert them to try again until something is entered.
+        * */
         mRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +91,9 @@ public class DriverLoginActivity extends AppCompatActivity {
             }
         });
 
+        /*
+        * Generates a session for the user if they are register on the database.
+        * */
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +115,9 @@ public class DriverLoginActivity extends AppCompatActivity {
             }
         });
 
-
+        /*
+        * Begins the activity for a driver when they forget psasword
+        * */
         mForgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,7 +128,9 @@ public class DriverLoginActivity extends AppCompatActivity {
             }
         });
 
-
+        /*
+        * Returns user to login page from the forgot password page
+        * */
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,12 +141,18 @@ public class DriverLoginActivity extends AppCompatActivity {
             }
         });
 
+    /*
+    * Creates the auth listener to store the current session data of driver.
+    * */
     }
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
     }
+    /*
+    * Removes the current driver session
+    * */
     @Override
     protected void onStop() {
         super.onStop();
